@@ -23,10 +23,10 @@ return new class extends Migration
             #$table->timestamp('email_verified_at')->nullable(); //por ver
             $table->string('password');
             $table->boolean('active')->default(false);
-            $table->rememberToken(); //por ver
+            $table->rememberToken();
             $table->timestamps();
-            $table->string('latitude')->nullable();
-            $table->string('longitude')->nullable();
+            $table->decimal('latitude', 9, 6)->nullable();
+            $table->decimal('longitude', 9, 6)->nullable();
         });
     }
 

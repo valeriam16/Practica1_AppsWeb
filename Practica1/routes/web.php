@@ -15,9 +15,13 @@ use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('app');
-});
-Route::get('/registrarForm', [AuthController::class, 'showRegisterForm']);
+})->name('principal');
+#Route::get('/registrarForm', [AuthController::class, 'showRegisterForm']);
+Route::get('/registrarForm', function () {
+    return view('templates/register');
+})->name('principal');
 Route::post('/registrar', [AuthController::class, 'register']);
+
 #Route::post('/login', [AuthController::class, 'login']);
 
 /* Route::get('/register', 'AuthController@showRegisterForm')->middleware('guest'); // Para invitados

@@ -18,17 +18,17 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <!-- <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Listar personas</a>
-                    </li> -->
                     <li class="nav-item">
-                        <a class="nav-link" href="/registrarForm">Registrar persona</a>
+                        <a class="nav-link" href="/registrarForm">Registrarme</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/loginForm">Logearme</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="container-fluid">
+    <div class="container-fluid gradient-custom">
         @yield('contenido')
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

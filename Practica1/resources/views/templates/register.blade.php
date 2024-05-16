@@ -3,7 +3,7 @@
 Registrar persona
 @endsection
 @section('contenido')
-<section class="h-100 h-custom gradient-custom">
+<section class="h-100 h-custom">
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-lg-8 col-xl-6">
@@ -16,7 +16,7 @@ Registrar persona
                             @csrf
                             <div data-mdb-input-init class="form-outline mb-4">
                                 <label class="form-label" for="name">Nombre</label>
-                                <input type="text" id="name" name="name" class="form-control" />
+                                <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}"/>
                                 @error('name')
                                 <div id="nombreError" class="alert alert-danger p-2 mt-2" style=" font-weight: bold;">{{$message}}</div>
                                 @enderror
@@ -28,7 +28,7 @@ Registrar persona
 
                                     <div data-mdb-input-init class="form-outline datepicker">
                                         <label for="lastname_p" class="form-label">Apellido paterno</label>
-                                        <input type="text" class="form-control" id="lastname_p" name="lastname_p" />
+                                        <input type="text" class="form-control" id="lastname_p" name="lastname_p" value="{{ old('lastname_p') }}"/>
                                         @error('lastname_p')
                                         <div id="nombreError" class="alert alert-danger p-2 mt-2" style=" font-weight: bold;">{{$message}}</div>
                                         @enderror
@@ -39,7 +39,7 @@ Registrar persona
 
                                     <div data-mdb-input-init class="form-outline datepicker">
                                         <label for="lastname_m" class="form-label">Apellido materno</label>
-                                        <input type="text" class="form-control" id="lastname_m" name="lastname_m" />
+                                        <input type="text" class="form-control" id="lastname_m" name="lastname_m" value="{{ old('lastname_m') }}"/>
                                         @error('lastname_m')
                                         <div id="nombreError" class="alert alert-danger p-2 mt-2" style=" font-weight: bold;">{{$message}}</div>
                                         @enderror
@@ -53,7 +53,7 @@ Registrar persona
 
                                     <div data-mdb-input-init class="form-outline datepicker">
                                         <label for="age" class="form-label">Edad</label>
-                                        <input type="number" class="form-control" id="age" name="age" />
+                                        <input type="number" class="form-control" id="age" name="age" value="{{ old('age') }}"/>
                                         @error('age')
                                         <div id="nombreError" class="alert alert-danger p-2 mt-2" style=" font-weight: bold;">{{$message}}</div>
                                         @enderror
@@ -64,7 +64,7 @@ Registrar persona
 
                                     <div data-mdb-input-init class="form-outline datepicker">
                                         <label for="birthdate" class="form-label">Fecha de nacimiento</label>
-                                        <input type="date" class="form-control" id="birthdate" name="birthdate" />
+                                        <input type="date" class="form-control" id="birthdate" name="birthdate" value="{{ old('birthdate') }}"/>
                                         @error('birthdate')
                                         <div id="nombreError" class="alert alert-danger p-2 mt-2" style=" font-weight: bold;">{{$message}}</div>
                                         @enderror
@@ -75,7 +75,7 @@ Registrar persona
 
                             <div data-mdb-input-init class="form-outline mb-4">
                                 <label class="form-label" for="email">Email</label>
-                                <input type="email" id="email" name="email" class="form-control" />
+                                <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}"/>
                                 @error('email')
                                 <div id="nombreError" class="alert alert-danger p-2 mt-2" style=" font-weight: bold;">{{$message}}</div>
                                 @enderror
@@ -83,7 +83,7 @@ Registrar persona
 
                             <div data-mdb-input-init class="form-outline mb-4">
                                 <label class="form-label" for="phone">Teléfono</label>
-                                <input type="tel" id="phone" name="phone" class="form-control" />
+                                <input type="tel" id="phone" name="phone" class="form-control" value="{{ old('phone') }}"/>
                                 @error('phone')
                                 <div id="nombreError" class="alert alert-danger p-2 mt-2" style=" font-weight: bold;">{{$message}}</div>
                                 @enderror

@@ -13,11 +13,10 @@ class AuthController extends Controller
         return view('templates/app');
     } */
 
-    public function showRegisterForm()
+    /* public function showRegisterForm()
     {
         return view('templates/register');
-    }
-    
+    } */
 
     public function register(Request $request)
     {
@@ -29,7 +28,7 @@ class AuthController extends Controller
             'age' => 'required|numeric',
             'birthdate' => 'required|date',
             'email' => 'required|email|unique:users,email',
-            'phone' => 'required|numeric|min:10|max:10|unique:users,phone',
+            'phone' => 'required|numeric|min_digits:10|max_digits:10|unique:users,phone',
             'password' => 'required|min:8|confirmed',
         ]);
 
@@ -59,6 +58,6 @@ class AuthController extends Controller
         $user->save();
 
         // Redireccionar al usuario a la página de app (principal)
-        return redirect()->route('/');
+        return redirect()->route('principal');
     }
 }
