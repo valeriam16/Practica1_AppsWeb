@@ -44,17 +44,6 @@ class AuthController extends Controller
             'password' => Hash::make($validatedData['password']),
             'active' => true,
         ]);
-
-        /* $user = new User();
-        $user->name = $request->name;
-        $user->lastname_p = $request->lastname_p;
-        $user->lastname_m = $request->lastname_m;
-        $user->age = $request->age;
-        $user->birthdate = $request->birthdate;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->password = bcrypt($request->password);
-        $user->active = true; */
         $user->save();
 
         // Redireccionar al usuario a la página de app (principal)

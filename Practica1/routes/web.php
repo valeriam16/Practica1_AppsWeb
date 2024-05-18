@@ -19,7 +19,7 @@ Route::get('/', function () {
 #Route::get('/registrarForm', [AuthController::class, 'showRegisterForm']);
 Route::get('/registrarForm', function () {
     return view('templates/register');
-})->name('principal');
+});
 Route::post('/registrar', [AuthController::class, 'register']);
 
 #Route::post('/login', [AuthController::class, 'login']);
