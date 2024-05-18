@@ -8,16 +8,6 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    /* public function principal()
-    {
-        return view('templates/app');
-    } */
-
-    /* public function showRegisterForm()
-    {
-        return view('templates/register');
-    } */
-
     public function register(Request $request)
     {
         #dd($request->all());
