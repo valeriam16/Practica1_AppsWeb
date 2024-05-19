@@ -24,6 +24,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/loginForm">Logearme</a>
                     </li>
+                    @yield('opciones')
                 </ul>
             </div>
         </div>

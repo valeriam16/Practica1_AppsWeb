@@ -15,14 +15,24 @@ use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('app');
-})->name('principal');
-#Route::get('/registrarForm', [AuthController::class, 'showRegisterForm']);
+})->name('principal')->middleware('guest.jwt');
 Route::get('/registrarForm', function () {
     return view('templates/register');
-});
+})->middleware('guest.jwt');
 Route::post('/registrar', [AuthController::class, 'register']);
 
-#Route::post('/login', [AuthController::class, 'login']);
+Route::get('/loginForm', function () {
+    return view('templates/login');
+})->name('login')->middleware('guest.jwt');
+Route::post('/login', [AuthController::class, 'login']);
+
+// AUTH
+Route::get('/auth', function () {
+    return view('templates/auth');
+})->name('auth')->middleware('auth.jwt');
+Route::get('/logout', [AuthController::class, 'logout']);
+
+
 
 /* Route::get('/register', 'AuthController@showRegisterForm')->middleware('guest'); // Para invitados
 Route::post('/register', 'AuthController@register'); // Para invitados

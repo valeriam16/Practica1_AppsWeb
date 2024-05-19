@@ -5,9 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Cookie;
+use App\Http\Middleware\JwtMiddleware;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+    /**
+     * Create a new AuthController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth.jwt')->except(['register', 'login']);
+    }
+
     public function register(Request $request)
     {
         #dd($request->all());
@@ -38,5 +52,106 @@ class AuthController extends Controller
 
         // Redireccionar al usuario a la página de app (principal)
         return redirect()->route('principal');
+    }
+
+    /**
+     * Get a JWT via given credentials.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function login(Request $request): Response
+    {
+        // Validar que email sea required|email y que password sea required|min:8
+        $validatedData = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:8',
+        ]);
+
+        $credentials = ['email' => $validatedData['email'], 'password' => $validatedData['password']];
+
+        // Generar el tokenJWT
+        if (!$token = auth()->attempt($credentials)) {
+            // En caso de error, redirigir al propio login con un mensaje de error 'Unauthorized'
+            return redirect()->route('login')->with('error', 'Unauthorized');
+        }
+
+        // Crear una cookie con el token JWT
+        $cookie = cookie('jwt', $token, 60);  // La cookie expira en 60 minutos
+
+        // En caso de exito, retornar a una ruta 'principal' con la cookie recién creada
+        return redirect()->route('auth')->withCookie($cookie);
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function me()
+    {
+        return response()->json(auth()->user());
+    }
+
+    /**
+     * Log the user out (Invalidate the token).
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout(): Response
+    {
+        // Invalidar el token JWT
+        auth()->logout();
+
+        // Eliminar la cookie
+        $cookie = Cookie::forget('jwt');
+
+        // Redirigir al usuario a la página de inicio de sesión
+        return redirect()->route('principal');
+
+        // return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    /**
+     * Refresh a token.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refresh()
+    {
+        return $this->respondWithToken(auth()->refresh());
+    }
+
+    /**
+     * Get the token array structure.
+     *
+     * @param  string $token
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60
+        ]);
+    }
+
+    public function showApp()
+    {
+        $token = request()->cookie('jwt');
+        $isAuthenticated = false;
+
+        if ($token) {
+            try {
+                JWTAuth::setToken($token);
+                $user = JWTAuth::authenticate($token);
+                $isAuthenticated = true;
+            } catch (\Exception $e) {
+                $isAuthenticated = false;
+            }
+        }
+
+        return view('app', ['isAuthenticated' => $isAuthenticated]);
     }
 }
