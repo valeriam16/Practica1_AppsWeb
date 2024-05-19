@@ -7,6 +7,7 @@
     <title> @yield('titulo') </title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('assets/estilos.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/creative-design.css') }}">
 </head>
 
 <body>
@@ -18,12 +19,6 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/registrarForm">Registrarme</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/loginForm">Logearme</a>
-                    </li>
                     @yield('opciones')
                 </ul>
             </div>

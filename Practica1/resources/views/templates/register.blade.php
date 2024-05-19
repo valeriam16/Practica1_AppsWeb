@@ -1,6 +1,11 @@
 @extends('app')
 @section('titulo')
-Registrar persona
+Registro
+@endsection
+@section('opciones')
+<li class="nav-item">
+    <a class="nav-link" href="/loginForm">Logearme</a>
+</li>
 @endsection
 @section('contenido')
 <section class="h-100 h-custom">

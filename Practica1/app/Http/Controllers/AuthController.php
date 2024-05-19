@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -14,7 +15,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api')->except(['register', 'login']);
+        $this->middleware('auth:api')->except(['register', 'login', 'logout']);
     }
 
     public function register(Request $request)
@@ -46,7 +47,7 @@ class AuthController extends Controller
         $user->save();
 
         // Redireccionar al usuario a la página de app (principal)
-        return redirect()->route('principal');
+        return redirect()->route('login');
     }
 
     public function login(Request $request): Response
@@ -79,7 +80,9 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        $user = auth()->user();
+        \Log::info('User', $user);
+        return view('templates.auth', compact('user')); // Asumiendo que 'auth' es el nombre de tu vista
     }
 
     /**
@@ -87,19 +90,31 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
+
     public function logout(): Response
     {
-        // Invalidar el token JWT
-        auth()->logout();
+        \Log::info('Entrando al método logout del controlador AuthController.');
 
-        /* // Eliminar la cookie
-        $cookie = Cookie::forget('jwt'); */
+        // Registrar que estamos intentando cerrar sesión
+        \Log::info('Intentando cerrar sesión.');
+
+        // Invalidar el token JWT
+        Auth::logout();
+
+        // Registrar que el token fue invalidado
+        \Log::info('Token JWT invalidado.');
+
+        // Eliminar la cookie
+        $cookie = Cookie::forget('jwt');
+
+        // Registrar que la cookie fue eliminada
+        \Log::info('Cookie JWT eliminada.');
 
         // Redirigir al usuario a la página de inicio de sesión
-        return redirect()->route('principal')->withCookie('jwt');
-
-        // return response()->json(['message' => 'Successfully logged out']);
+        return redirect()->route('principal')->withCookie($cookie);
     }
+
+
 
     /**
      * Refresh a token.

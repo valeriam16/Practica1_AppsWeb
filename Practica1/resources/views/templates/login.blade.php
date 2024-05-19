@@ -2,8 +2,13 @@
 @section('titulo')
 Login
 @endsection
+@section('opciones')
+<li class="nav-item">
+    <a class="nav-link" href="/registrarForm">Registrarme</a>
+</li>
+@endsection
 @section('contenido')
-<section class="vh-100">
+<section class="vh-85">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col col-xl-10">

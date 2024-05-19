@@ -16,7 +16,7 @@ use App\Http\Controllers\AuthController;
 Route::middleware('guest.jwt')->group(function () {
     // Vista app.blade.php
     Route::get('/', function () {
-        return view('app');
+        return view('templates/noauth');
     })->name('principal');
 
     // Vista register.blade.php
@@ -40,5 +40,5 @@ Route::middleware('auth.jwt')->group(function () {
         return view('templates/auth');
     })->name('auth');
 
-    Route::get('/logout', [AuthController::class, 'logout']);
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });
