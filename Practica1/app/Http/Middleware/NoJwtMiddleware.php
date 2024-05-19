@@ -16,13 +16,22 @@ class NoJwtMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        try {
-            $user = JWTAuth::parseToken()->authenticate();
-            return redirect()->route('auth');
-        } catch (\Exception $e) {
-            
+        // Extraer el token de la cookie y añadirlo al encabezado 'Authorization'
+        if ($token = $request->cookie('jwt')) {
+            $request->headers->set('Authorization', 'Bearer ' . $token);
         }
 
+        try {
+            // Intenta obtener el usuario autenticado
+            $user = JWTAuth::parseToken()->authenticate();
+
+            // Si el usuario está autenticado, redirige a la ruta '/auth'
+            return redirect()->route('auth');
+        } catch (\Exception $e) {
+            // Si ocurre alguna excepción, permite el acceso a la ruta
+            //\Log::error('JWT Middleware Error: ' . $e->getMessage());
+            return $next($request);
+        }
         return $next($request);
     }
 }

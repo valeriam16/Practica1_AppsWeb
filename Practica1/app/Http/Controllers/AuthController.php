@@ -7,19 +7,14 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Cookie;
-use App\Http\Middleware\JwtMiddleware;
 use Tymon\JWTAuth\Facades\JWTAuth;
+
 
 class AuthController extends Controller
 {
-    /**
-     * Create a new AuthController instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        $this->middleware('auth.jwt')->except(['register', 'login']);
+        $this->middleware('auth:api')->except(['register', 'login']);
     }
 
     public function register(Request $request)
@@ -54,11 +49,6 @@ class AuthController extends Controller
         return redirect()->route('principal');
     }
 
-    /**
-     * Get a JWT via given credentials.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function login(Request $request): Response
     {
         // Validar que email sea required|email y que password sea required|min:8
@@ -72,7 +62,7 @@ class AuthController extends Controller
         // Generar el tokenJWT
         if (!$token = auth()->attempt($credentials)) {
             // En caso de error, redirigir al propio login con un mensaje de error 'Unauthorized'
-            return redirect()->route('login')->with('error', 'Unauthorized');
+            return redirect()->route('login')->with('error', 'Las credenciales que has proporcionado no son correctas.');
         }
 
         // Crear una cookie con el token JWT
@@ -102,11 +92,11 @@ class AuthController extends Controller
         // Invalidar el token JWT
         auth()->logout();
 
-        // Eliminar la cookie
-        $cookie = Cookie::forget('jwt');
+        /* // Eliminar la cookie
+        $cookie = Cookie::forget('jwt'); */
 
         // Redirigir al usuario a la página de inicio de sesión
-        return redirect()->route('principal');
+        return redirect()->route('principal')->withCookie('jwt');
 
         // return response()->json(['message' => 'Successfully logged out']);
     }
@@ -118,7 +108,7 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->respondWithToken(auth()->refresh());
+        return $this->respondWithToken(auth('api')->refresh());
     }
 
     /**
@@ -135,23 +125,5 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
-    }
-
-    public function showApp()
-    {
-        $token = request()->cookie('jwt');
-        $isAuthenticated = false;
-
-        if ($token) {
-            try {
-                JWTAuth::setToken($token);
-                $user = JWTAuth::authenticate($token);
-                $isAuthenticated = true;
-            } catch (\Exception $e) {
-                $isAuthenticated = false;
-            }
-        }
-
-        return view('app', ['isAuthenticated' => $isAuthenticated]);
     }
 }

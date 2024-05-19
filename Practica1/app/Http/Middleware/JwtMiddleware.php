@@ -25,13 +25,13 @@ class JwtMiddleware
         try {
             $user = JWTAuth::parseToken()->authenticate();
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-            return redirect()->route('principal')->withErrors(["message" => "Token expirado"]);
+            return redirect()->route('login')->withErrors(["message" => "Token expirado"]);
         } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-            return redirect()->route('principal')->withErrors(["message" => "Token inválido"]);
+            return redirect()->route('login')->withErrors(["message" => "Token inválido"]);
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
-            return redirect()->route('principal')->withErrors(["message" => "Token ausente"]);
+            return redirect()->route('login')->withErrors(["message" => "Token ausente"]);
         } catch (\Exception $e) {
-            return redirect()->route('principal')->withErrors(["message" => "Acceso no autorizado"]);
+            return redirect()->route('login')->withErrors(["message" => "Acceso no autorizado"]);
         }
 
         return $next($request);

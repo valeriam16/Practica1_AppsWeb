@@ -13,34 +13,32 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::get('/', function () {
-    return view('app');
-})->name('principal')->middleware('guest.jwt');
-Route::get('/registrarForm', function () {
-    return view('templates/register');
-})->middleware('guest.jwt');
-Route::post('/registrar', [AuthController::class, 'register']);
+Route::middleware('guest.jwt')->group(function () {
+    // Vista app.blade.php
+    Route::get('/', function () {
+        return view('app');
+    })->name('principal');
 
-Route::get('/loginForm', function () {
-    return view('templates/login');
-})->name('login')->middleware('guest.jwt');
-Route::post('/login', [AuthController::class, 'login']);
+    // Vista register.blade.php
+    Route::get('/registrarForm', function () {
+        return view('templates/register');
+    });
 
-// AUTH
-Route::get('/auth', function () {
-    return view('templates/auth');
-})->name('auth')->middleware('auth.jwt');
-Route::get('/logout', [AuthController::class, 'logout']);
+    // Vista login.blade.php
+    Route::get('/loginForm', function () {
+        return view('templates/login');
+    })->name('login');
 
+    // Métodos de lógica
+    Route::post('/registrar', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
 
+Route::middleware('auth.jwt')->group(function () {
+    // Vista auth.blade.php
+    Route::get('/auth', function () {
+        return view('templates/auth');
+    })->name('auth');
 
-/* Route::get('/register', 'AuthController@showRegisterForm')->middleware('guest'); // Para invitados
-Route::post('/register', 'AuthController@register'); // Para invitados
-
-Route::get('/login', 'AuthController@showLoginForm')->middleware('guest'); // Para invitados
-Route::post('/login', 'AuthController@login')->middleware('guest'); // Para invitados
-
-Route::get('/', 'HomeController@index')->middleware('auth'); // Solo para usuarios autenticados */
-
-#Route::get('/', [AuthController::class, 'principal']);
-#Route::get('/principal', [HomeController::class, 'index'])->middleware('auth');
+    Route::get('/logout', [AuthController::class, 'logout']);
+});
