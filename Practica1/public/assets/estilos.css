@@ -1,8 +1,8 @@
-@media (min-width: 1025px) {
+/* @media (min-width: 1025px) {
     .h-custom {
         height: 100vh !important;
     }
-}
+} */
 
 .gradient-custom {
     /* fallback for old browsers */
@@ -26,15 +26,33 @@
     background: linear-gradient(to right bottom, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1))
 }
 
-.carousel {
+#intro {
+    background-image: url("https://mdbootstrap.com/img/new/fluid/city/018.jpg");
     height: 100vh;
+    background-size: cover; /* Asegura que la imagen cubra todo el contenedor */
+    position: relative; /* Necesario para la máscara absoluta */
+    padding: 0;
+    margin: 0;
 }
 
-.carousel-inner, .carousel-item {
-    height: 100vh;
+/* Máscara oscura */
+#intro .mask {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
-.carousel-item img {
-    object-fit: cover;
-    height: 100vh;
+/* Height for devices larger than 576px */
+@media (min-width: 992px) {
+    #intro {
+        margin-top: -58.59px;
+    }
+}
+
+.navbar {
+    z-index: 1000;
+    /* Puedes ajustar este valor según tus necesidades */
 }
