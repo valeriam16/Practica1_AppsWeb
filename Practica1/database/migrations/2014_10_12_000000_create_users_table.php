@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('birthdate');
             $table->string('email')->unique();
             $table->string('phone')->unique();
-            #$table->timestamp('email_verified_at')->nullable(); //por ver
+            $table->timestamp('email_verified_at')->nullable(); //por ver
             $table->string('password');
             $table->boolean('active')->default(false);
             $table->rememberToken();

@@ -1,7 +1,14 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\AuthController;
+use Illuminate\Http\Request;
+
+use App\Models\User;
+use Illuminate\Auth\Events\Verified;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +20,7 @@ use App\Http\Controllers\AuthController;
 |
 */
 
+// PRÁCTICA 1
 Route::middleware('guest.jwt')->group(function () {
     // Vista app.blade.php
     Route::get('/', function () {
@@ -42,3 +50,34 @@ Route::middleware('auth.jwt')->group(function () {
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+    // PRÁCTICA 2
+    Route::get('/email/verify', function () {
+        return view('auth.verify-email');
+    })->name('verification.notice');
+
+    /* Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+
+        return redirect('/');
+    })->middleware(['signed'])->name('verification.verify'); */
+    /* Route::get('/email/verify/{id}/{hash}', function ($id, $hash) {
+        $user = User::find($id);
+    
+        if ($user && ! $user->hasVerifiedEmail() && hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            $user->markEmailAsVerified();
+            event(new Verified($user));
+    
+            return redirect('/')->with('message', 'Your email has been verified!');
+        }
+    
+        return redirect('/')->with('error', 'Invalid verification link or email already verified.');
+    })->middleware(['signed'])->name('verification.verify'); */
+    Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
+    ->middleware(['signed'])->name('verification.verify');
+
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('message', 'Verification link sent!');
+    })->middleware(['throttle:6,1'])->name('verification.send');

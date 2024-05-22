@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Auth\Events\Verified;
 
 
 class AuthController extends Controller
@@ -42,12 +44,16 @@ class AuthController extends Controller
             'email' => $validatedData['email'],
             'phone' => $validatedData['phone'],
             'password' => Hash::make($validatedData['password']),
-            'active' => true,
         ]);
         $user->save();
 
-        // Redireccionar al usuario a la página de app (principal)
-        return redirect()->route('login');
+        Log::info("User", [$user]);
+        // Envia correo de verificación
+        $user->sendEmailVerificationNotification();
+        Log::info("Email Enviado");
+
+        // Redireccionar al usuario a la página de verificación de email
+        return redirect()->route('verification.notice');
     }
 
     public function login(Request $request): Response
@@ -140,5 +146,20 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
+    }
+
+    // Práctica 2
+    public function verifyEmail($id, $hash)
+    {
+        $user = User::find($id);
+
+        if ($user && ! $user->hasVerifiedEmail() && hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            $user->markEmailAsVerified();
+            event(new Verified($user));
+
+            return redirect('/')->with('message', 'Your email has been verified!');
+        }
+
+        return redirect('/')->with('error', 'Invalid verification link or email already verified.');
     }
 }
