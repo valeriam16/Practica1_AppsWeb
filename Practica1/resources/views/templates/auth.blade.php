@@ -4,12 +4,15 @@ Dashboard
 @endsection
 @section('opciones')
 <li class="nav-item">
+    <a class="nav-link" href="/read">Lista de usuarios</a>
+</li>
+<li class="nav-item">
     <a class="nav-link" href="/logout">Cerrar Sesión</a>
 </li>
 @endsection
 
 @section('contenido')
-<section class="vh-100">
+<section class="vh-120">
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col col-lg-6 mb-4 mb-lg-0">

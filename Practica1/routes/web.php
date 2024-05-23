@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UsersController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,7 +15,7 @@ use App\Http\Controllers\AuthController;
 */
 
 Route::middleware('guest.jwt')->group(function () {
-    // Vista app.blade.php
+    // Vista noauth.blade.php
     Route::get('/', function () {
         return view('templates/noauth');
     })->name('principal');
@@ -30,9 +31,11 @@ Route::middleware('guest.jwt')->group(function () {
     })->name('login');
 
     // Métodos de lógica
-    Route::post('/registrar', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/registrar', [AuthController::class, 'register'])->name('registrar');
+    //Route::post('/login', [AuthController::class, 'login']);
 });
+
+Route::post('/login', [AuthController::class, 'login'])->middleware(['guest.jwt', 'checkstatus']); // Aplicar ambos middlewares a la ruta de login
 
 Route::middleware('auth.jwt')->group(function () {
     // Vista auth.blade.php
@@ -41,4 +44,9 @@ Route::middleware('auth.jwt')->group(function () {
     })->name('auth');
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    Route::get('/read', [UsersController::class, 'read'])->name('read');
+    Route::post('/edit', [UsersController::class, 'edit'])->name('edit');
+    Route::post('/update', [UsersController::class, 'update'])->name('update');
 });
+
