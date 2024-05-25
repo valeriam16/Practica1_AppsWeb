@@ -55,32 +55,6 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'Registro exitoso. Por favor, revisa tu correo electrónico para activar tu cuenta.');
     }
 
-    /* public function login(Request $request): Response
-    {
-        $validatedData = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        if ($validatedData->fails()) {
-            return redirect('login')
-                        ->withErrors($validatedData)
-                        ->withInput();
-        }
-
-        $credentials = $validatedData->validated();
-
-        try {
-            if (! $token = JWTAuth::attempt($credentials)) {
-                return redirect()->route('login')->with('error', 'Las credenciales que has proporcionado no son correctas.');
-            }
-        } catch (JWTException $e) {
-            Log::info($e);
-            return redirect('login')->with('error', '¡Hay un error!. Contáctate con el admin.');
-        }
-        return redirect()->route('auth')->withCookie(cookie('token', $token, 60));
-    } */
-
     public function login(Request $request): Response
     {
         $validatedData = Validator::make($request->all(), [
@@ -107,13 +81,6 @@ class AuthController extends Controller
         return redirect()->route('auth')->withCookie(cookie('token', $token, 60));
     }
 
-
-    public function me()
-    {
-        $user = auth()->user();
-        return view('templates.auth', compact('user')); // Asumiendo que 'auth' es el nombre de tu vista
-    }
-
     public function logout(): Response
     {
         // Invalidar el token JWT
@@ -124,19 +91,5 @@ class AuthController extends Controller
 
         // Redirigir al usuario a la página de inicio de sesión
         return redirect()->route('principal')->withCookie($cookie);
-    }
-
-    public function refresh()
-    {
-        return $this->respondWithToken(auth('api')->refresh());
-    }
-
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
-        ]);
     }
 }

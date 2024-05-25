@@ -10,18 +10,21 @@ class UsersController extends Controller
     public function read()
     {
         $users = User::all();
-
         return view('templates/read', compact('users'));
     }
 
     public function edit(Request $request)
     {
+        $request->validate([
+            'id' => 'required|integer',
+        ]);
+
         $user = User::find($request->id);
 
         if ($user) {
             return view('templates/edit', compact('user'));
         } else {
-            return redirect()->route('templates/read')->with('error', 'El usuario no ha sido encontrado.');
+            return redirect()->back()->with('error', 'No puedes acceder a esta ruta debido a que no te encuentras logeado.');
         }
     }
 
@@ -56,10 +59,10 @@ class UsersController extends Controller
                 $user->password = bcrypt($request->password);
             }
             $user->save(); //Guardamos
-            return redirect()->route('read')->with('mensaje', 'Cambios guardados del usuario.');
+            return redirect()->route('read')->with('message', 'Cambios del usuario guardados.');
         } else {
             return redirect()->route('read')->with('error', 'El usuario no ha sido encontrado.');
         }
-        return redirect()->route('read');
+        return redirect()->back();
     }
 }

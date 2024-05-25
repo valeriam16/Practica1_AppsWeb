@@ -53,7 +53,7 @@ Dashboard
                     </button>
                 </td> -->
                 <td class="text-center">
-                    <form action="{{ url('edit') }}" method="POST" style="display: inline;">
+                    <form action="{{ url('edit') }}" method="GET" style="display: inline;">
                         @csrf
                         <input type="hidden" name="id" value="{{ $user->id }}">
                         <button type="submit" class="btn btn-link btn-sm btn-rounded">

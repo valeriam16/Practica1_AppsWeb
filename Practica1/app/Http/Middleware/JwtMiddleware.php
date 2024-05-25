@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use Illuminate\Support\Facades\Log;
 
 
 class JwtMiddleware
@@ -20,9 +19,7 @@ class JwtMiddleware
     {
         try {
             $user = JWTAuth::parseToken()->authenticate();
-            //Log::info('Cookie JWT detectada. Usuario autenticado: ' . $user->getKey());
         } catch (\Exception $e) {
-            //Log::info('Excepción general: ' . $e->getMessage());
             return redirect()->route('login')->withErrors(["message" => "Necesitas iniciar sesión."]);
         }
         return $next($request);

@@ -46,7 +46,6 @@ Route::middleware('auth.jwt')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('/read', [UsersController::class, 'read'])->name('read');
-    Route::post('/edit', [UsersController::class, 'edit'])->name('edit');
+    Route::get('/edit', [UsersController::class, 'edit'])->name('edit'); //cambiar esta ruta a get
     Route::post('/update', [UsersController::class, 'update'])->name('update');
 });
-
