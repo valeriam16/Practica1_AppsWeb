@@ -12,7 +12,29 @@ Dashboard
 @endsection
 
 @section('contenido')
-<div class="container-fluid px-5 py-5 vh-100">
+<div class="container-fluid px-5 py-5 vh-200">
+    @if (session('message'))
+    <div id="message-alert" class="alert alert-success">
+        {{ session('message') }}
+    </div>
+    <script>
+        // Ocultar el mensaje de alerta después de 3 segundos
+        setTimeout(function() {
+            document.getElementById('message-alert').style.display = 'none';
+        }, 3000);
+    </script>
+    @endif
+    @if (session('error'))
+    <div id="error-alert" class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+    <script>
+        // Ocultar el mensaje de error después de 3 segundos
+        setTimeout(function() {
+            document.getElementById('error-alert').style.display = 'none';
+        }, 3000);
+    </script>
+    @endif
     <table class="table align-middle mb-0 bg-white">
         <thead class="bg-light">
             <tr>

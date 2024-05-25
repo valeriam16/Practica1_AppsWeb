@@ -23,7 +23,7 @@ Route::middleware('guest.jwt')->group(function () {
     // Vista register.blade.php
     Route::get('/registrarForm', function () {
         return view('templates/register');
-    });
+    })->name('registrarForm');
 
     // Vista login.blade.php
     Route::get('/loginForm', function () {

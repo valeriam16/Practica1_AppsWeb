@@ -7,6 +7,7 @@ use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Http;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -30,10 +31,11 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|numeric|min_digits:10|max_digits:10|unique:users,phone',
             'password' => 'required|min:8|confirmed',
+            'g-recaptcha-response' => ['required', new \App\Rules\Recaptcha]
         ]);
 
         if ($validatedData->fails()) {
-            return redirect('registro')
+            return redirect('registrarForm')
                 ->withErrors($validatedData)
                 ->withInput();
         }

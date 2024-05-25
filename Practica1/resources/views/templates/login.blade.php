@@ -4,7 +4,7 @@ Login
 @endsection
 @section('opciones')
 <li class="nav-item">
-    <a class="nav-link" href="/registrarForm">Registrarme</a>
+  <a class="nav-link" href="/registrarForm">Registrarme</a>
 </li>
 @endsection
 @section('contenido')
@@ -41,9 +41,16 @@ Login
                   </div>
 
                   @if(session('error'))
-                  <div class="alert alert-danger" role="alert">
+                  <div id="errorDiv" class="alert alert-danger" role="alert">
                     {{ session('error') }}
                   </div>
+
+                  <script>
+                    // Ocultar el mensaje de error después de 3 segundos
+                    setTimeout(function() {
+                      document.getElementById('errorDiv').style.display = 'none';
+                    }, 3000);
+                  </script>
                   @endif
 
                   <div class="pt-1 mb-4">

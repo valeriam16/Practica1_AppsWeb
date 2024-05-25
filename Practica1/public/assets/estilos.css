@@ -29,8 +29,10 @@
 #intro {
     background-image: url("https://mdbootstrap.com/img/new/fluid/city/018.jpg");
     height: 100vh;
-    background-size: cover; /* Asegura que la imagen cubra todo el contenedor */
-    position: relative; /* Necesario para la máscara absoluta */
+    background-size: cover;
+    /* Asegura que la imagen cubra todo el contenedor */
+    position: relative;
+    /* Necesario para la máscara absoluta */
     padding: 0;
     margin: 0;
 }
@@ -55,4 +57,12 @@
 .navbar {
     z-index: 1000;
     /* Puedes ajustar este valor según tus necesidades */
+}
+
+.alert {
+    transition: opacity 0.5s ease-in-out;
+}
+
+.alert.hidden {
+    opacity: 0;
 }
