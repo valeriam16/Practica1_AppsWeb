@@ -5,10 +5,10 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Models\User;
+use Exception;
 
-
-class JwtMiddleware
+class CheckActiveStatus
 {
     /**
      * Handle an incoming request.
@@ -18,9 +18,10 @@ class JwtMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         try {
-            $user = JWTAuth::parseToken()->authenticate();
-        } catch (\Exception $e) {
-            return redirect()->route('login')->withErrors(["message" => "Necesitas iniciar sesión."]);
+            if (!User::where('email', $request->input('email'))->first()->active) {
+                return redirect()->route('login')->with(["error" => "Tu cuenta no está activa."]);
+            }
+        } catch (Exception $e) {
         }
         return $next($request);
     }
