@@ -9,13 +9,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Auth\Events\Verified;
 
 
 class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api')->except(['register', 'login', 'logout']);
+        $this->middleware('auth:api')->except(['register', 'login', 'logout', 'verifyEmail']);
     }
 
     public function register(Request $request)
@@ -30,6 +32,7 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|numeric|min_digits:10|max_digits:10|unique:users,phone',
             'password' => 'required|min:8|confirmed',
+            'g-recaptcha-response' => ['required', new \App\Rules\Recaptcha],
         ]);
 
         // Crear el nuevo usuario
@@ -42,12 +45,16 @@ class AuthController extends Controller
             'email' => $validatedData['email'],
             'phone' => $validatedData['phone'],
             'password' => Hash::make($validatedData['password']),
-            'active' => true,
         ]);
         $user->save();
 
-        // Redireccionar al usuario a la página de app (principal)
-        return redirect()->route('login');
+        Log::info("User", [$user]);
+        // Envia correo de verificación
+        $user->sendEmailVerificationNotification();
+        Log::info("Email Enviado");
+
+        // Redireccionar al usuario a la página de verificación de email
+        return redirect()->route('login')->with('success', 'Registro exitoso. Termina de activar tu cuenta dando click al enlace que te mandamos por correo electrónico.');
     }
 
     public function login(Request $request): Response
@@ -140,5 +147,23 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
+    }
+
+    // Práctica 2
+    public function verifyEmail($id, $hash)
+    {
+        $user = User::find($id);
+
+        if ($user && ! $user->hasVerifiedEmail() && hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            $user->markEmailAsVerified();
+            $user->active = true;
+            $user->save();
+
+            event(new Verified($user));
+
+            return redirect('/')->with('message', 'Your email has been verified!');
+        }
+
+        return redirect('/')->with('error', 'Invalid verification link or email already verified.');
     }
 }

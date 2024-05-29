@@ -4,6 +4,9 @@ Dashboard
 @endsection
 @section('opciones')
 <li class="nav-item">
+    <a class="nav-link" href="/read">Lista de usuarios</a>
+</li>
+<li class="nav-item">
     <a class="nav-link" href="/logout">Cerrar Sesión</a>
 </li>
 @endsection
