@@ -21,19 +21,80 @@ Editar Usuario
             <input type="hidden" name="id" value="{{ $user->id }}">
 
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-6">
+
+                    <!-- USUARIO -->
                     <div class="card mb-4">
-                        <div class="card-body text-center">
-                            <img src="https://www.hotelbooqi.com/wp-content/uploads/2021/12/128-1280406_view-user-icon-png-user-circle-icon-png.png" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
-                            <h6 class="my-3">Editando al usuario:</h6>
-                            <h3 class="">{{ $user->name }} {{ $user->lastname_p }}</h3>
-                        </div>
-                        <div class="d-flex justify-content-center pt-3 pb-4">
-                            <button type="submit" class="btn btn-dark">Guardar cambios</button>
+                        <div class="row">
+                            <div class="col-sm-6 align-self-center">
+                                <div class="card-body text-center">
+                                    <img src="https://www.hotelbooqi.com/wp-content/uploads/2021/12/128-1280406_view-user-icon-png-user-circle-icon-png.png" alt="avatar" class="rounded-circle img-fluid" style="width: 25ex;">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="card-body text-center">
+                                    <h6 class="my-3">Editando al usuario:</h6>
+                                    <h3 class="">{{ $user->name }} {{ $user->lastname_p }}</h3>
+                                </div>
+                                <div class="d-flex justify-content-center pt-3 pb-4">
+                                    <button type="submit" class="btn btn-dark">Guardar cambios</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Google Map HTML -->
+
+                    <div class="container">
+                        <div id="map" style="width:100%; height:350px;">
+                        </div>
+                    </div>
+
+                    <script async
+                        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGZJalRCqLXpoessAe4eKkoMFG13k4MDU&libraries=map,marker">
+                    </script>
+
+                    <script>
+                        var map;
+                        var marker;
+
+                        function showMap(lat, long) {
+                            var coord = { lat:lat, lng: long };
+
+                            map = new google.maps.Map(document.getElementById("map"), { zoom: 15, center: coord })
+
+                            marker = new google.maps.Marker({ 
+                                position:coord, 
+                                map:map });
+
+                            map.addListener("click", function(e) {
+                                newCoords(e.latLng.lat(), e.latLng.lng());
+                            });
+                        }
+
+                        function newCoords(lat, long) {
+                            // Actualiza los campos ocultos
+                            document.getElementById('latitude').value = lat;
+                            document.getElementById('longitude').value = long;
+
+                            if (marker) {
+                                marker.setMap(null);
+                            }
+
+                            marker = new google.maps.Marker({
+                                position: { lat: lat, lng: long },
+                                map: map
+                            });
+                        }
+
+
+                        showMap({{ $user->latitude }}, {{ $user->longitude }});
+
+                    </script>
                 </div>
-                <div class="col-lg-8">
+
+                <!-- CAMPOS EDICIÓN -->
+                <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="row">
@@ -115,6 +176,18 @@ Editar Usuario
                                         <label class="form-check-label" for="active0">
                                             Inactiva
                                         </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="">
+                                        <input type="hidden" id="latitude" name="latitude" value="{{ $user->latitude }}">
+                                    </div>
+                                    <div class="">
+                                        <input type="hidden" id="longitude" name="longitude" value="{{ $user->longitude }}">
                                     </div>
                                 </div>
                             </div>

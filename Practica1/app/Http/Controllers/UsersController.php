@@ -38,6 +38,10 @@ class UsersController extends Controller
             'birthdate' => 'required|date',
             'email' => 'required|email|unique:users,email,' . $request->id,
             'phone' => 'required|numeric|min_digits:10|max_digits:10|unique:users,phone,' . $request->id,
+            'email' => 'required|email|unique:users,email,' . $request->id,
+            'phone' => 'required|numeric|min_digits:10|max_digits:10|unique:users,phone,' . $request->id,
+            'latitude' => 'numeric|between:-90,90',
+            'longitude' => 'numeric|between:-180,180',
         ]);
 
         $user = User::find($request->id); //Buscar user con tal id
@@ -51,6 +55,8 @@ class UsersController extends Controller
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->active = $request->active;
+            $user->latitude = $request->latitude;
+            $user->longitude = $request->longitude;
             // Solo actualizar la contraseña si se proporciona una nueva
             if ($request->filled('password')) {
                 $request->validate([
@@ -58,6 +64,7 @@ class UsersController extends Controller
                 ]);
                 $user->password = bcrypt($request->password);
             }
+
             $user->save(); //Guardamos
             return redirect()->route('read')->with('message', 'Cambios del usuario guardados.');
         } else {

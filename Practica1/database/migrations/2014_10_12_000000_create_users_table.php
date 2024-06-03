@@ -25,8 +25,8 @@ return new class extends Migration
             $table->boolean('active')->default(false);
             $table->rememberToken();
             $table->timestamps();
-            $table->decimal('latitude', 9, 6)->nullable();
-            $table->decimal('longitude', 9, 6)->nullable();
+            $table->decimal('latitude', 10, 7)->default(25.5325672);
+            $table->decimal('longitude', 10, 7)->default(-103.3216953);
         });
     }
 
